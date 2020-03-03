@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	ratios, err := client.FetchFinancialStatements("AAPL")
+	ratios, err := client.FetchCashFlowStatements("AAPL")
 	if (err != nil) {
 		fmt.Println(err)
 	}

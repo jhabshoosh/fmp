@@ -14,7 +14,7 @@ const companyQuoteURL = "https://financialmodelingprep.com/api/v3/quote/"
 const companyProfileURL = "https://financialmodelingprep.com/api/v3/company/profile/"
 const financialRatiosURL = "https://financialmodelingprep.com/api/v3/financial-ratios/"
 const financialStatementsURL = "https://financialmodelingprep.com/api/v3/financials/income-statement/"
-
+const cashFlowStatementsURL = "https://financialmodelingprep.com/api/v3/financials/cash-flow-statement/"
 
 // KeyMetrics
 type KeyMetrics struct {
@@ -223,6 +223,30 @@ type FinancialStatment struct {
 	NetProfitMargin string `json:"Net Profit Margin"`
 }
 
+type CashFlowStatementResponse struct {
+	Symbol string
+	Financials []CashFlowStatement
+}
+
+type CashFlowStatement struct {
+	Date string 
+	DepreciationAndAmortization string `json:"Depreciation & Amortization"`
+	StockBasedCompensation string `json:"Stock-based compensation"`
+	OperatingCashFlow string `json:"Operating Cash Flow"`
+	CapitalExpenditure string `json:"Capital Expenditure"`
+	AcquistionsAndDisposals string `json:"Acquisitions and disposals"`
+	InvestmentPurchasesAndSales string `json:"Investment purchases and sales"`
+	InvestingCashFlow string `json:"Investing Cash flow"`
+	IssRepaymentOfDebt string `json:"Issuance (repayment) of debt"`
+	IssBuybacksOfShares string `json:"Issuance (buybacks) of shares"`
+	DividendPayments string `json:"Dividend payments"`
+	FinancingCashFlow string `json:"Financing Cash Flow"`
+	EffectOfForexChangesOnCash string `json:"Effect of forex changes on cash"`
+	NetCashFlowOverChangeInCash string `json:"Net cash flow / Change in cash"`
+	FreeCashFlow string `json:"Free Cash Flow"`
+	NetCashOverMarketCap string `json:"Net Cash/Marketcap"`
+}
+
 
 func GetSymbolsList() []Stock {
 	res, err := http.Get(allCompaniesURL)
@@ -323,7 +347,24 @@ func FetchFinancialStatements(symbol string) (FinancialStatementsResponse, error
 	var fsr FinancialStatementsResponse
 	err = json.Unmarshal(body, &fsr)
 	if (err != nil) {
-		fmt.Println("err unmarshalling:", err)
+		fmt.Println("ehttps://financialmodelingprep.com/api/v3/financials/cash-flow-statement/AAPLrr unmarshalling:", err)
 	}
 	return fsr, err
+}
+
+
+func FetchCashFlowStatements(symbol string) (CashFlowStatementResponse, error) {
+	res, err := http.Get(cashFlowStatementsURL + symbol)
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+			panic(err.Error())
+	}
+
+	var cfsr CashFlowStatementResponse
+	err = json.Unmarshal(body, &cfsr)
+	if (err != nil) {
+		fmt.Println("err unmarshalling:", err)
+	}
+	return cfsr, err
 }
