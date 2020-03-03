@@ -13,6 +13,7 @@ const allCompaniesURL = "https://financialmodelingprep.com/api/v3/company/stock/
 const companyQuoteURL = "https://financialmodelingprep.com/api/v3/quote/"
 const companyProfileURL = "https://financialmodelingprep.com/api/v3/company/profile/"
 const financialRatiosURL = "https://financialmodelingprep.com/api/v3/financial-ratios/"
+const financialStatementsURL = "https://financialmodelingprep.com/api/v3/financials/income-statement/"
 
 
 // KeyMetrics
@@ -182,6 +183,47 @@ type CashFlowIndicatorRatios struct {
 	DividendPayoutRatio string
 }
 
+type FinancialStatementsResponse struct {
+	Symbol string
+	Financials []FinancialStatment
+}
+
+type FinancialStatment struct {
+	Date string
+	Revenue string
+	RevenueGrowth string `json:"Revenue Growth"`
+	CostOfRevenue string `json:"Cost of Revenue"`
+	GrossProfit string `json:"Gross Profit"`
+	RDExpenses string `json:"R&D Expenses"`
+	SGAExpense string `json:"SG&A Expense"`
+	OperatingExpenses string `json:"Operating Expenses"`
+	OperatingIncome string `json:"Operating Income"`
+	InterestExpense string `json:"Interest Expense"`
+	EarningsBeforeTax string `json:"Earnings before Tax"`
+	IncomeTaxExpense string `json:"Income Tax Expense"`
+	NetIncomeNonControllingInt string `json:"Net Income - Non-Controlling int"`
+	NetIncomeDiscontinuedOps string `json:"Net Income - Discontinued ops"`
+	NetIncome string `json:"Net Income"`
+	PreferredDividends string `json:"Preferred Dividends"`
+	NetIncomeCom string `json:"Net Income Com"`
+	EPS string
+	EPSDiluted string `json:"EPS Diluted"`
+	WeightedAverageShsOut string `json:"Weighted Average Shs Out"`
+	WeightedAverageShsOutDil string `json:"Weighted Average Shs Out (Dil)"`
+	DividendPerShare string `json:"Dividend per Share"`
+	GrossMargin string `json:"Gross Margin"`
+	EBITDAMargin string `json:"EBITDA Margin"`
+	EBITMargin string `json:"EBIT Margin"`
+	ProfitMargin string `json:"Profit Margin"`
+	FreeCashFlowMargin string `json:"Free Cash Flow margin"`
+	EBITDA string
+	EBIT string
+	ConsolidatedIncome string `json:"Consolidated Income"`
+	EarningsBeforeTaxMargin string `json:"Earnings Before Tax Margin"`
+	NetProfitMargin string `json:"Net Profit Margin"`
+}
+
+
 func GetSymbolsList() []Stock {
 	res, err := http.Get(allCompaniesURL)
 	if err != nil {
@@ -268,4 +310,20 @@ func FetchFinancialRatios(symbol string) (FinancialRatiosResponse, error) {
 		fmt.Println("err unmarshalling:", err)
 	}
 	return frr, err
+}
+
+func FetchFinancialStatements(symbol string) (FinancialStatementsResponse, error) {
+	res, err := http.Get(financialStatementsURL + symbol)
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+			panic(err.Error())
+	}
+
+	var fsr FinancialStatementsResponse
+	err = json.Unmarshal(body, &fsr)
+	if (err != nil) {
+		fmt.Println("err unmarshalling:", err)
+	}
+	return fsr, err
 }
