@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/jhabshoo/fmp/pkg/client"
 	"fmt"
+	"github.com/jhabshoosh/fmp/pkg/client"
 )
 
 func main() {
 	ratios, err := client.FetchCashFlowStatements("AAPL")
-	if (err != nil) {
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(ratios)

@@ -1,3 +1,3 @@
-module github.com/jhabshoo/fmp
+module github.com/jhabshoosh/fmp
 
 go 1.14
