@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/jhabshoo/fmp/pkg/client"
 	"fmt"
-	"github.com/jhabshoo/fmp/client"
 )
 
 func main() {
